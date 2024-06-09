@@ -1,6 +1,10 @@
 #include "App.hpp"
+#include "Emulator.hpp"
 #include <Luna/Runtime/Log.hpp>
 #include <Luna/ImGui/ImGui.hpp>
+#include <Luna/Window/FileDialog.hpp>
+#include <Luna/Window/MessageBox.hpp>
+#include <Luna/Runtime/File.hpp>
 
 RV App::init()
 {
@@ -101,10 +105,43 @@ void App::draw_main_menu_bar()
         {
             if(ImGui::MenuItem("Open"))
             {
-                // TODO...
+                open_cartridge();
+            }
+            if(ImGui::MenuItem(("Close"))){
+                close_cartridge();
+
             }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
+}
+void App::open_cartridge()
+{
+    lutry
+    {
+        Window::FileDialogFilter filter;
+        filter.name = "GameBoy cartridge file";
+        const c8* extensions[] = {"gb"};
+        filter.extensions = {extensions, 1};
+        auto result = Window::open_file_dialog("Select Project File", {&filter, 1});
+        if(succeeded(result) && !result.get().empty())
+        {
+            close_cartridge(); // Close previous cartridge if present.
+            Path& path = result.get()[0];
+            lulet(f, open_file(path.encode().c_str(), FileOpenFlag::read, FileCreationMode::open_existing));
+            lulet(rom_data, load_file_data(f));
+            UniquePtr<Emulator> emu(memnew<Emulator>());
+            luexp(emu->init(rom_data.data(), rom_data.size()));
+            emulator = move(emu);
+        }
+    }
+    lucatch
+    {
+        Window::message_box("Failed to open cartridge file.", "Load cartridge failed", Window::MessageBoxType::ok, Window::MessageBoxIcon::error);
+    }
+}
+void App::close_cartridge()
+{
+    emulator.reset();
 }

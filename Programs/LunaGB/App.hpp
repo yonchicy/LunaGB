@@ -1,5 +1,6 @@
 #pragma once
 #include <Luna/RHI/Device.hpp>
+#include <Luna/Runtime/UniquePtr.hpp>
 using namespace Luna;
 
 struct App
@@ -20,10 +21,13 @@ struct App
     //! The command buffer used to submit draw calls.
     Ref<RHI::ICommandBuffer> cmdbuf;
 
+    UniquePtr<Emulator> emulator;
     RV init();
     RV update();
     ~App();
 
     void draw_gui();
     void draw_main_menu_bar();
+    void open_cartridge();
+    void close_cartridge();
 };
