@@ -25,3 +25,6 @@ inline CartridgeHeader* get_cartridge_header(byte_t* rom_data)
 {
     return (CartridgeHeader*)(rom_data + 0x0100);
 }
+const c8* get_cartridge_type_name(u8 type);
+const c8* get_cartridge_ram_size_name(u8 ram_size_code);
+const c8* get_cartridge_lic_code_name(u8 lic_code);

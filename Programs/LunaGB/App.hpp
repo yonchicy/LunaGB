@@ -1,6 +1,10 @@
 #pragma once
+
+
+#include "Emulator.hpp"
 #include <Luna/RHI/Device.hpp>
 #include <Luna/Runtime/UniquePtr.hpp>
+
 using namespace Luna;
 
 struct App
