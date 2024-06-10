@@ -5,6 +5,7 @@
 #include <Luna/Window/FileDialog.hpp>
 #include <Luna/Window/MessageBox.hpp>
 #include <Luna/Runtime/File.hpp>
+#include <Luna/Runtime/Time.hpp>
 
 RV App::init()
 {
@@ -57,6 +58,17 @@ RV App::update()
             is_exiting = true;
             return ok;
         }
+
+        u64 ticks = get_ticks();
+        u64 delta_ticks = ticks - last_frame_ticks;
+        f64 delta_time = (f64)delta_ticks / get_ticks_per_second();
+        delta_time = min(delta_time, 0.125);
+        if(emulator)
+        {
+            emulator->update(delta_time);
+        }
+        last_frame_ticks = ticks;
+
 
         // Draw GUI.
         draw_gui();

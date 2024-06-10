@@ -1,5 +1,8 @@
 
 #include "Cartridge.hpp"
+#include "Emulator.hpp"
+#include <Luna/Runtime/Log.hpp>
+
 
 
 static const c8 * ROM_TYPES[] = {
@@ -130,4 +133,17 @@ const c8* get_cartridge_lic_code_name(u8 lic_code)
         default: break;
     }
     return "UNKNOWN";
+}
+u8 cartridge_read(Emulator* emu, u16 addr)
+{
+    if(addr <= 0x7FFF)
+    {
+        return emu->rom_data[addr];
+    }
+    log_error("LunaGB", "Unsupported cartridge read address: 0x%04X", (u32)addr);
+    return 0xFF;
+}
+void cartridge_write(Emulator* emu, u16 addr, u8 data)
+{
+    log_error("LunaGB", "Unsupported cartridge write address: 0x%04X", (u32)addr);
 }

@@ -24,8 +24,9 @@ struct App
     Ref<RHI::ISwapChain> swap_chain;
     //! The command buffer used to submit draw calls.
     Ref<RHI::ICommandBuffer> cmdbuf;
-
     UniquePtr<Emulator> emulator;
+
+    u64 last_frame_ticks;
     RV init();
     RV update();
     ~App();
